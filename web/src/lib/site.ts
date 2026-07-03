@@ -13,8 +13,8 @@ export const contacts = {
   phone: "+7 (938) 412-47-93",
   phoneHref: "tel:+79384124793",
   whatsapp: "+7 (938) 412-47-93",
-  // Предполагаем, что номер привязан к WhatsApp — подтвердить у заказчика.
-  whatsappHref: "https://wa.me/79384124793",
+  // Персональная ссылка WhatsApp (click-to-chat / QR) — предоставлена заказчиком.
+  whatsappHref: "https://wa.me/qr/OZO5MG64WAY7O1",
   // MAX (мессенджер). Личная ссылка на профиль (у MAX нет ссылки по номеру).
   max: "MAX",
   maxNumber: "+7 (928) 268-41-06",
