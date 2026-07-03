@@ -1,8 +1,8 @@
 /**
  * Наши работы — реальные объекты с установленными маркизами DAMASKA.
  * Фото предоставлены заказчиком. Две группы: частные дома и бизнес.
- * (work-house-entrance и work-house-modern используются в карточках/шоукейсе,
- *  поэтому в галерее не дублируются.)
+ * (work-house-entrance используется в карточках, work-house-terrace и work-dora —
+ *  в диптихе-шоукейсе, поэтому в галерее не дублируются.)
  */
 
 export interface Work {
@@ -51,8 +51,18 @@ export const workGroups: WorkGroup[] = [
   },
   {
     title: "Для бизнеса",
-    subtitle: "Маркизы для кафе, отелей, салонов, магазинов и супермаркетов",
+    subtitle: "Маркизы для ресторанов, кафе, отелей, салонов и магазинов",
     items: [
+      {
+        src: "/images/works/work-forno-rosso.jpg",
+        caption: "Ресторан FORNO ROSSO",
+        alt: "Маркиза для ресторана FORNO ROSSO в центре Краснодара",
+      },
+      {
+        src: "/images/works/work-rakov.jpg",
+        caption: "Ресторан «Раков и Крабов»",
+        alt: "Маркизы для ресторана «Раков и Крабов» в центре Краснодара",
+      },
       {
         src: "/images/works/work-shato.webp",
         caption: "Бутик-отель «Шато»",

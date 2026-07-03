@@ -69,7 +69,9 @@
       "Bash(git push *)",
       "Bash(git ls-remote *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(echo \"=== committed: $? ===\")"
     ]
   }
 }

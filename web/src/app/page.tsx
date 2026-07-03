@@ -189,23 +189,43 @@ export default function LandingPage() {
           </Container>
         </section>
 
-        {/* ------------------------------------------------------- SHOWCASE */}
+        {/* ------------------------------------ SHOWCASE (диптих: бизнес + дом) */}
         <section className="relative">
-          <div className="relative aspect-[16/10] w-full overflow-hidden bg-sand sm:aspect-[21/9]">
-            {/* Ниже первого экрана — ленивая загрузка, чтобы не тормозить LCP (заголовок) */}
-            <Image
-              src="/images/works/work-house-terrace.jpg"
-              alt="Маркиза для террасы частного дома в Краснодаре"
-              fill
-              loading="lazy"
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-graphite/75 via-graphite/15 to-transparent" />
+          <div className="relative grid aspect-[16/11] w-full grid-cols-2 overflow-hidden bg-sand sm:aspect-[21/9]">
+            {/* Левая половина — бизнес (кафе в центре города) */}
+            <div className="relative overflow-hidden">
+              <Image
+                src="/images/works/work-dora.jpg"
+                alt="Маркизы для кафе-кулинарии «Дора» в центре Краснодара"
+                fill
+                loading="lazy"
+                sizes="50vw"
+                className="object-cover"
+              />
+              <span className="absolute left-3 top-3 rounded-full bg-graphite/65 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-bone backdrop-blur-sm">
+                Бизнес
+              </span>
+            </div>
+            {/* Правая половина — частный дом */}
+            <div className="relative overflow-hidden border-l-2 border-bone/80">
+              <Image
+                src="/images/works/work-house-terrace.jpg"
+                alt="Маркиза для террасы частного дома в Краснодаре"
+                fill
+                loading="lazy"
+                sizes="50vw"
+                className="object-cover"
+              />
+              <span className="absolute right-3 top-3 rounded-full bg-graphite/65 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-bone backdrop-blur-sm">
+                Дом
+              </span>
+            </div>
+            {/* Градиент + подпись на всю ширину */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-graphite/85 via-graphite/25 to-transparent" />
             <Container className="absolute inset-x-0 bottom-0">
               <div className="flex flex-col gap-2 pb-7">
                 <span className="font-display text-lg font-bold text-bone sm:text-2xl">
-                  Маркизы под ключ — от замера до монтажа
+                  Для дома и для бизнеса — под ключ
                 </span>
                 <span className="text-sm text-bone/80 sm:text-base">
                   Собственное производство в Краснодаре · работаем по всему краю
