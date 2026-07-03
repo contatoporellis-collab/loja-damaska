@@ -70,6 +70,46 @@ export function Telegram(props: IconProps) {
   );
 }
 
+/**
+ * Официальная иконка приложения MAX (мессенджер).
+ * Полноцветная: фирменный градиент (синий → фиолетовый) + белый «пузырь».
+ * Форма марки — официальный путь логотипа max.ru.
+ */
+export function Max(props: IconProps) {
+  return (
+    <svg
+      viewBox="-12 -12 66 66"
+      width={24}
+      height={24}
+      aria-hidden="true"
+      {...props}
+    >
+      <defs>
+        <linearGradient id="maxLogoGradient" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stopColor="#47B2F5" />
+          <stop offset="0.32" stopColor="#4185F6" />
+          <stop offset="0.62" stopColor="#4930E0" />
+          <stop offset="1" stopColor="#964BDA" />
+        </linearGradient>
+      </defs>
+      <rect
+        x="-12"
+        y="-12"
+        width="66"
+        height="66"
+        rx="15"
+        fill="url(#maxLogoGradient)"
+      />
+      <path
+        fill="#fff"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M21.47 41.88c-4.11 0-6.02-.6-9.34-3-2.1 2.7-8.75 4.81-9.04 1.2 0-2.71-.6-5-1.28-7.5C1 29.5.08 26.07.08 21.1.08 9.23 9.82.3 21.36.3c11.55 0 20.6 9.37 20.6 20.91a20.6 20.6 0 0 1-20.49 20.67m.17-31.32c-5.62-.29-10 3.6-10.97 9.7-.8 5.05.62 11.2 1.83 11.52.58.14 2.04-1.04 2.95-1.95a10.4 10.4 0 0 0 5.08 1.81 10.7 10.7 0 0 0 11.19-9.97 10.7 10.7 0 0 0-10.08-11.1Z"
+      />
+    </svg>
+  );
+}
+
 export function MapPin(props: IconProps) {
   return (
     <svg {...base(props)} aria-hidden="true">
@@ -200,6 +240,7 @@ const icons = {
   Check,
   Phone,
   Telegram,
+  Max,
   MapPin,
   Menu,
   Close,

@@ -1,6 +1,13 @@
+import Link from "next/link";
 import { Container } from "./Container";
 import { contacts, site } from "@/lib/site";
-import { MapPin, Phone, Telegram, Whatsapp } from "./icons";
+import { MapPin, Phone, Max, Whatsapp } from "./icons";
+
+const legalLinks = [
+  { href: "/privacy", label: "Политика конфиденциальности" },
+  { href: "/consent", label: "Согласие на обработку ПД" },
+  { href: "/cookies", label: "Файлы cookie" },
+];
 
 export function LandingFooter() {
   return (
@@ -50,13 +57,13 @@ export function LandingFooter() {
               WhatsApp
             </a>
             <a
-              href={contacts.telegramHref}
+              href={contacts.maxHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 rounded-full border border-bone/15 px-3 py-1.5 text-sm text-bone/75 transition-colors hover:text-amber"
             >
-              <Telegram className="h-4 w-4" />
-              Telegram
+              <Max className="h-4 w-4" />
+              MAX
             </a>
             <a
               href={contacts.vkHref}
@@ -77,15 +84,29 @@ export function LandingFooter() {
             <MapPin className="mt-0.5 h-5 w-5 shrink-0" />
             {contacts.address}
           </p>
+          <p className="text-sm text-bone/55">{contacts.hours}</p>
         </div>
       </Container>
 
       <div className="border-t border-bone/10">
-        <Container className="flex flex-col gap-2 py-5 text-xs text-bone/45 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {2026} {site.name}. {site.tagline}.
-          </p>
-          <p>Маркизы под ключ в Краснодаре и Краснодарском крае.</p>
+        <Container className="flex flex-col gap-4 py-5">
+          <nav className="flex flex-wrap gap-x-5 gap-y-2 text-xs text-bone/55">
+            {legalLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="transition-colors hover:text-amber"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="flex flex-col gap-2 text-xs text-bone/45 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              © {2026} {site.name}. {site.tagline}.
+            </p>
+            <p>Маркизы под ключ в Краснодаре и Краснодарском крае.</p>
+          </div>
         </Container>
       </div>
     </footer>

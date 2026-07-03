@@ -3,9 +3,17 @@
 /**
  * Запись на бесплатный замер.
  *
- * Пока это «заглушка»: заявка валидируется и логируется на сервере.
- * Реальная доставка (Telegram-бот / e-mail) подключается отдельным этапом —
- * достаточно заменить тело sendLead().
+ * Доставка заявки — на e-mail через HTTPS (Unisender Go, транзакционные письма).
+ * SMTP-порты у хостинга закрыты, поэтому шлём через HTTP API (порт 443).
+ * Настраивается переменными окружения (в панели Timeweb → App → «Переменные»):
+ *   MAIL_API_KEY   — API-ключ Unisender Go (обязателен для отправки)
+ *   MAIL_TO        — куда слать заявки (по умолчанию damaskad@yandex.ru)
+ *   MAIL_FROM      — адрес отправителя на ПОДТВЕРЖДЁННОМ домене
+ *                    (по умолчанию zayavki@damaska.net)
+ *   MAIL_FROM_NAME — имя отправителя (по умолчанию «Сайт DAMASKA»)
+ * Если MAIL_API_KEY не задан (например, локально) — заявка только логируется
+ * на сервере, форма продолжает работать.
+ * Позже сюда же можно добавить дубль-доставку в бот MAX.
  */
 
 export interface MeasurementState {
@@ -71,9 +79,88 @@ type Lead = {
   comment: string;
 };
 
+const MAIL_API_KEY = process.env.MAIL_API_KEY;
+const MAIL_TO = process.env.MAIL_TO || "damaskad@yandex.ru";
+const MAIL_FROM = process.env.MAIL_FROM || "zayavki@damaska.net";
+const MAIL_FROM_NAME = process.env.MAIL_FROM_NAME || "Сайт DAMASKA";
+const UNISENDER_ENDPOINT =
+  "https://goapi.unisender.ru/ru/transactional/api/v1/email/send.json";
+
+function formatLead(lead: Lead): { subject: string; text: string; html: string } {
+  const when = new Intl.DateTimeFormat("ru-RU", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "Europe/Moscow",
+  }).format(new Date());
+
+  const rows: [string, string][] = [
+    ["Имя", lead.name || "—"],
+    ["Телефон", lead.phone],
+    ["Откуда", lead.product || "лендинг"],
+  ];
+  if (lead.comment) rows.push(["Комментарий", lead.comment]);
+  rows.push(["Время (МСК)", when]);
+
+  const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
+  const html =
+    `<h2 style="margin:0 0 12px">Новая заявка с сайта DAMASKA</h2>` +
+    `<table style="border-collapse:collapse;font:15px/1.5 Arial,sans-serif">` +
+    rows
+      .map(
+        ([k, v]) =>
+          `<tr><td style="padding:4px 12px 4px 0;color:#666">${k}</td>` +
+          `<td style="padding:4px 0"><b>${v}</b></td></tr>`,
+      )
+      .join("") +
+    `</table>`;
+
+  return { subject: `Заявка с сайта — ${lead.phone}`, text, html };
+}
+
 async function sendLead(lead: Lead): Promise<void> {
-  // TODO: подключить доставку заявок (Telegram-бот / e-mail).
+  // Всегда логируем: если письмо не уйдёт, заявка останется в логах сервера.
   console.info("[DAMASKA] Новая заявка на замер:", lead);
+
+  if (!MAIL_API_KEY) {
+    console.warn(
+      "[DAMASKA] MAIL_API_KEY не задан — письмо не отправлено (заявка в логах).",
+    );
+    return;
+  }
+
+  const { subject, text, html } = formatLead(lead);
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(UNISENDER_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": MAIL_API_KEY,
+      },
+      body: JSON.stringify({
+        message: {
+          recipients: [{ email: MAIL_TO }],
+          subject,
+          body: { html, plaintext: text },
+          from_email: MAIL_FROM,
+          from_name: MAIL_FROM_NAME,
+        },
+      }),
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      const info = await res.text().catch(() => "");
+      console.error(
+        `[DAMASKA] Unisender Go вернул ошибку ${res.status}: ${info}`,
+      );
+    }
+  } catch (err) {
+    // Не роняем отправку формы из-за сбоя почты — заявка уже в логах выше.
+    console.error("[DAMASKA] Не удалось отправить письмо с заявкой:", err);
+  }
 }
 
 /**

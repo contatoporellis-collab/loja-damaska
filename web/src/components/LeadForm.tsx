@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { requestMeasurement, type MeasurementState } from "@/app/actions";
 import { Button } from "./Button";
-import { Check, Telegram, Whatsapp } from "./icons";
+import { Check, Max, Whatsapp } from "./icons";
 import { cn } from "@/lib/cn";
 
 const initial: MeasurementState = { status: "idle" };
@@ -17,11 +18,10 @@ export function LeadForm({
   title,
   subtitle,
   button,
-  consent,
   altLabel,
   successMessage,
   whatsappHref,
-  telegramHref,
+  maxHref,
   tone = "light",
   className,
   id,
@@ -30,11 +30,10 @@ export function LeadForm({
   title?: string;
   subtitle?: string;
   button: string;
-  consent: string;
   altLabel: string;
   successMessage: string;
   whatsappHref: string;
-  telegramHref: string;
+  maxHref: string;
   tone?: "light" | "dark";
   className?: string;
   id?: string;
@@ -126,11 +125,30 @@ export function LeadForm({
         {pending ? "Отправляем…" : button}
       </Button>
 
-      <p className="text-center text-xs leading-relaxed text-faint">{consent}</p>
+      <p className="text-center text-xs leading-relaxed text-faint">
+        Нажимая кнопку, вы соглашаетесь с{" "}
+        <Link href="/privacy" className="underline underline-offset-2 hover:text-accent">
+          Политикой конфиденциальности
+        </Link>{" "}
+        и даёте{" "}
+        <Link href="/consent" className="underline underline-offset-2 hover:text-accent">
+          согласие на обработку персональных данных
+        </Link>
+        .
+      </p>
 
       <div className="flex flex-col items-center gap-2 border-t border-line pt-3">
         <span className="text-xs text-faint">{altLabel}</span>
         <div className="flex gap-2">
+          <a
+            href={maxHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[#0A66FF]/12 px-3.5 py-1.5 text-sm font-medium text-[#0a53cc] transition-colors hover:bg-[#0A66FF]/20"
+          >
+            <Max className="h-4 w-4" />
+            MAX
+          </a>
           <a
             href={whatsappHref}
             target="_blank"
@@ -139,15 +157,6 @@ export function LeadForm({
           >
             <Whatsapp className="h-4 w-4" />
             WhatsApp
-          </a>
-          <a
-            href={telegramHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full bg-[#2AABEE]/12 px-3.5 py-1.5 text-sm font-medium text-[#1d8fca] transition-colors hover:bg-[#2AABEE]/20"
-          >
-            <Telegram className="h-4 w-4" />
-            Telegram
           </a>
         </div>
       </div>

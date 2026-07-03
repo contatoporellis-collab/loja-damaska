@@ -1,10 +1,10 @@
 import { contacts } from "@/lib/site";
 import { landing } from "@/data/landing";
-import { Phone, Ruler, Whatsapp } from "./icons";
+import { Phone, Ruler, Max } from "./icons";
 
 /**
  * Закреплённая нижняя панель на мобильных: 3 крупных действия.
- * Телефон и WhatsApp часто конвертируют лучше формы у аудитории 30–60.
+ * Телефон и мессенджер часто конвертируют лучше формы у аудитории 30–60.
  * Чистый CSS, без JS.
  */
 export function StickyMobileBar() {
@@ -20,13 +20,13 @@ export function StickyMobileBar() {
           <span className="text-xs font-medium">{m.stickyCall}</span>
         </a>
         <a
-          href={contacts.whatsappHref}
+          href={contacts.maxHref}
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center gap-1 border-x border-line py-2.5 text-ink active:bg-ink/[0.06]"
         >
-          <Whatsapp className="h-5 w-5 text-[#128C4B]" />
-          <span className="text-xs font-medium">{m.stickyWhatsapp}</span>
+          <Max className="h-5 w-5" />
+          <span className="text-xs font-medium">{m.stickyMax}</span>
         </a>
         <a
           href="#zayavka"

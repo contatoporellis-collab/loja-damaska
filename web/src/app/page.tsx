@@ -67,11 +67,10 @@ function leadFormProps(source: string) {
   return {
     source,
     button: h.formButton,
-    consent: h.formConsent,
     altLabel: h.formAlt,
     successMessage: landing.microcopy.successMessage,
     whatsappHref: contacts.whatsappHref,
-    telegramHref: contacts.telegramHref,
+    maxHref: contacts.maxHref,
   };
 }
 
@@ -93,7 +92,7 @@ export default function LandingPage() {
       addressCountry: "RU",
     },
     areaServed: "Краснодарский край",
-    sameAs: [contacts.vkHref, contacts.telegramHref],
+    sameAs: [contacts.vkHref, contacts.maxHref],
     url: site.url,
   };
 

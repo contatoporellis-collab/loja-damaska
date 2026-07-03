@@ -50,7 +50,26 @@
       "WebFetch(domain:www.houzz.ru)",
       "WebFetch(domain:flatica.ru)",
       "PowerShell($p = \"C:\\\\Users\\\\Asus\\\\Desktop\\\\Damaska\\\\fotos\"; Get-ChildItem -Path $p -Recurse -File | Select-Object @{n='Rel';e={$_.FullName.Substring\\($p.Length+1\\)}}, @{n='KB';e={[math]::Round\\($_.Length/1KB\\)}}, @{n='Dim';e={try{$img=[System.Drawing.Image]::FromFile\\($_.FullName\\); \"$\\($img.Width\\)x$\\($img.Height\\)\"}catch{'?'}finally{if\\($img\\){$img.Dispose\\(\\)}}}} | Format-Table -AutoSize)",
-      "PowerShell($p = \"C:\\\\Users\\\\Asus\\\\Desktop\\\\Damaska\\\\fotos\"; Get-ChildItem -Path $p -Recurse -File | Sort-Object LastWriteTime | Select-Object @{n='Rel';e={$_.FullName.Substring\\($p.Length+1\\)}}, @{n='KB';e={[math]::Round\\($_.Length/1KB\\)}}, LastWriteTime | Format-Table -AutoSize)"
+      "PowerShell($p = \"C:\\\\Users\\\\Asus\\\\Desktop\\\\Damaska\\\\fotos\"; Get-ChildItem -Path $p -Recurse -File | Sort-Object LastWriteTime | Select-Object @{n='Rel';e={$_.FullName.Substring\\($p.Length+1\\)}}, @{n='KB';e={[math]::Round\\($_.Length/1KB\\)}}, LastWriteTime | Format-Table -AutoSize)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(curl -sL \"https://commons.wikimedia.org/wiki/Special:FilePath/Max_\\(app\\)_logo.svg\" -o max_logo.svg)",
+      "Bash(curl -sL \"https://commons.wikimedia.org/wiki/Special:FilePath/Max_logo_2025.png\" -o max_icon.png)",
+      "Bash(file max_icon.png)",
+      "Bash(python -c \"from PIL import Image; im=Image.open\\('max_icon.png'\\); print\\('size', im.size, 'mode', im.mode\\)\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('nodemailer:', p.dependencies.nodemailer, '| @types:', p.devDependencies['@types/nodemailer']\\)\")",
+      "Bash(node -e ' *)",
+      "WebFetch(domain:timeweb.cloud)",
+      "Bash(gh auth *)",
+      "Bash(grep -iE \"\\\\.\\(pdf|zip\\)$|fotos/\")",
+      "WebFetch(domain:godocs.unisender.ru)",
+      "Bash(npm uninstall *)",
+      "Bash(git remote *)",
+      "Bash(git --version)",
+      "Bash(git push *)",
+      "Bash(git ls-remote *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
