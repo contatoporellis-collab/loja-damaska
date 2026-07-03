@@ -71,7 +71,8 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(awk '{print $5, $9}')",
-      "Bash(echo \"=== committed: $? ===\")"
+      "Bash(echo \"=== committed: $? ===\")",
+      "WebFetch(domain:contatoporellis-collab-loja-damaska-9b98.twc1.net)"
     ]
   }
 }

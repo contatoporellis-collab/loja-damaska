@@ -49,7 +49,9 @@ export function ButtonLink({
   children: ReactNode;
 } & Omit<ComponentProps<typeof Link>, "href" | "className">) {
   const external = /^https?:|^tel:|^mailto:/.test(href);
-  if (external) {
+  // Якорные ссылки (#...) рендерим нативным <a>: браузер сам прокручивает
+  // к секции (next/link в App Router не всегда скроллит к hash на той же странице).
+  if (external || href.startsWith("#")) {
     return (
       <a
         href={href}
