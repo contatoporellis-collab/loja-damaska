@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "./Container";
-import { contacts, site } from "@/lib/site";
+import { contacts, operator, site } from "@/lib/site";
 import { MapPin, Phone, Max, Whatsapp } from "./icons";
 
 const legalLinks = [
@@ -101,6 +101,9 @@ export function LandingFooter() {
               </Link>
             ))}
           </nav>
+          <p className="text-xs text-bone/60">
+            {operator.legalName} · ИНН {operator.inn}
+          </p>
           <div className="flex flex-col gap-2 text-xs text-bone/60 sm:flex-row sm:items-center sm:justify-between">
             <p>
               © {2026} {site.name}. {site.tagline}.
