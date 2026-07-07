@@ -3,9 +3,15 @@
 /**
  * Запись на бесплатный замер.
  *
- * Доставка заявки — на e-mail через HTTPS (Unisender Go, транзакционные письма).
- * SMTP-порты у хостинга закрыты, поэтому шлём через HTTP API (порт 443).
- * Настраивается переменными окружения (в панели Timeweb → App → «Переменные»):
+ * Доставка заявки по HTTPS (порт 443; SMTP у хостинга закрыт):
+ *   1) amoCRM (основной канал) — сделка + контакт;
+ *   2) e-mail через Unisender Go (резервный канал).
+ * Работают независимо: настроен хотя бы один — заявка уходит; оба сбоят —
+ * заявка остаётся в логах сервера.
+ * amoCRM:
+ *   AMOCRM_SUBDOMAIN    — поддомен аккаунта (напр. damaska → damaska.amocrm.ru)
+ *   AMOCRM_ACCESS_TOKEN — долгосрочный токен интеграции
+ * E-mail настраивается переменными (в панели Timeweb → App → «Переменные»):
  *   MAIL_API_KEY   — API-ключ Unisender Go (обязателен для отправки)
  *   MAIL_TO        — куда слать заявки (по умолчанию damaskad@yandex.ru)
  *   MAIL_FROM      — адрес отправителя на ПОДТВЕРЖДЁННОМ домене
@@ -97,6 +103,10 @@ const MAIL_FROM_NAME = process.env.MAIL_FROM_NAME || "Сайт DAMASKA";
 const UNISENDER_ENDPOINT =
   "https://goapi.unisender.ru/ru/transactional/api/v1/email/send.json";
 
+// amoCRM — основной канал доставки заявок (сделка + контакт).
+const AMOCRM_SUBDOMAIN = process.env.AMOCRM_SUBDOMAIN; // напр. "damaska"
+const AMOCRM_TOKEN = process.env.AMOCRM_ACCESS_TOKEN; // долгосрочный токен
+
 function formatLead(lead: Lead): { subject: string; text: string; html: string } {
   const when = new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "short",
@@ -132,16 +142,8 @@ function formatLead(lead: Lead): { subject: string; text: string; html: string }
   return { subject: `Заявка с сайта — ${lead.phone}`, text, html };
 }
 
-async function sendLead(lead: Lead): Promise<void> {
-  // Всегда логируем: если письмо не уйдёт, заявка останется в логах сервера.
-  console.info("[DAMASKA] Новая заявка на замер:", lead);
-
-  if (!MAIL_API_KEY) {
-    console.warn(
-      "[DAMASKA] MAIL_API_KEY не задан — письмо не отправлено (заявка в логах).",
-    );
-    return;
-  }
+async function sendEmail(lead: Lead): Promise<void> {
+  if (!MAIL_API_KEY) return;
 
   const { subject, text, html } = formatLead(lead);
   try {
@@ -176,6 +178,95 @@ async function sendLead(lead: Lead): Promise<void> {
     // Не роняем отправку формы из-за сбоя почты — заявка уже в логах выше.
     console.error("[DAMASKA] Не удалось отправить письмо с заявкой:", err);
   }
+}
+
+/** Текст примечания к сделке amoCRM: источник + рекламные метки. */
+function amocrmNote(lead: Lead): string {
+  const lines = [`Источник формы: ${lead.product || "лендинг"}`];
+  const utm = lead.utm ?? {};
+  for (const [key, label] of UTM_LABELS) {
+    if (utm[key]) lines.push(`${label}: ${utm[key]}`);
+  }
+  return lines.join("\n");
+}
+
+/** Создать сделку + контакт в amoCRM (основной канал). */
+async function sendToAmocrm(lead: Lead): Promise<void> {
+  if (!AMOCRM_SUBDOMAIN || !AMOCRM_TOKEN) return;
+
+  const base = `https://${AMOCRM_SUBDOMAIN}.amocrm.ru/api/v4`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${AMOCRM_TOKEN}`,
+  };
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(`${base}/leads/complex`, {
+      method: "POST",
+      headers,
+      signal: controller.signal,
+      body: JSON.stringify([
+        {
+          name: `Заявка с сайта (${lead.product || "лендинг"})`,
+          _embedded: {
+            contacts: [
+              {
+                name: lead.name || "Клиент с сайта",
+                custom_fields_values: [
+                  {
+                    field_code: "PHONE",
+                    values: [{ value: lead.phone, enum_code: "WORK" }],
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      ]),
+    });
+    clearTimeout(timeout);
+
+    if (!res.ok) {
+      console.error(
+        `[DAMASKA] amoCRM вернул ошибку ${res.status}: ${await res
+          .text()
+          .catch(() => "")}`,
+      );
+      return;
+    }
+
+    // Примечание с источником/UTM (best-effort, сделка уже создана).
+    const data = await res.json().catch(() => null);
+    const leadId = Array.isArray(data) ? data[0]?.id : undefined;
+    if (leadId) {
+      await fetch(`${base}/leads/${leadId}/notes`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify([
+          { note_type: "common", params: { text: amocrmNote(lead) } },
+        ]),
+      }).catch(() => {});
+    }
+  } catch (err) {
+    console.error("[DAMASKA] Не удалось создать сделку в amoCRM:", err);
+  }
+}
+
+/**
+ * Доставка заявки: сначала лог (страховка), затем оба канала параллельно —
+ * amoCRM (основной) и e-mail (резервный). Сбой одного не мешает другому.
+ */
+async function sendLead(lead: Lead): Promise<void> {
+  console.info("[DAMASKA] Новая заявка на замер:", lead);
+  if (!AMOCRM_TOKEN && !MAIL_API_KEY) {
+    console.warn(
+      "[DAMASKA] Ни amoCRM, ни e-mail не настроены — заявка только в логах.",
+    );
+    return;
+  }
+  await Promise.allSettled([sendToAmocrm(lead), sendEmail(lead)]);
 }
 
 /**
