@@ -56,7 +56,9 @@ export function LeadForm({
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-accent">
           <Check className="h-7 w-7" />
         </span>
-        <h3 className="font-display text-xl font-bold text-ink">Заявка принята!</h3>
+        <p className="font-display text-xl font-bold leading-tight text-ink">
+          Заявка принята!
+        </p>
         <p className="max-w-xs text-muted">{successMessage}</p>
       </div>
     );
@@ -75,7 +77,9 @@ export function LeadForm({
     >
       {title ? (
         <div className="flex flex-col gap-1">
-          <h3 className="font-display text-xl font-bold text-ink">{title}</h3>
+          <p className="font-display text-xl font-bold leading-tight text-ink">
+            {title}
+          </p>
           {subtitle ? (
             <p className="text-sm leading-relaxed text-muted">{subtitle}</p>
           ) : null}

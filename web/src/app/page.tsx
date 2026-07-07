@@ -542,7 +542,11 @@ export default function LandingPage() {
             </div>
 
             <div className="mx-auto flex max-w-2xl flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-line bg-surface p-7 text-center shadow-[var(--shadow-card)]">
-              <div className="flex items-center gap-0.5 text-amber" aria-label="Высокий рейтинг">
+              <div
+                className="flex items-center gap-0.5 text-amber"
+                role="img"
+                aria-label="Высокий рейтинг"
+              >
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} className="h-5 w-5" />
                 ))}

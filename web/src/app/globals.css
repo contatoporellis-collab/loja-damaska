@@ -14,7 +14,7 @@
 
   --color-ink: #17191e; /* graphite near-black — the "factory" */
   --color-muted: #595d67; /* body / secondary text (>=4.5:1 on bone) */
-  --color-faint: #6b6f79; /* captions, meta (AA: ~4.6:1 на bone) */
+  --color-faint: #5f636d; /* captions, meta (AA: ~5.2:1 на bone — WCAG AA) */
   --color-line: #e4ddcf; /* warm hairline borders */
 
   --color-graphite: #14161a; /* dark sections (footer, hero overlays) */

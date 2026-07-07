@@ -101,7 +101,7 @@ export function LandingFooter() {
               </Link>
             ))}
           </nav>
-          <div className="flex flex-col gap-2 text-xs text-bone/45 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-2 text-xs text-bone/60 sm:flex-row sm:items-center sm:justify-between">
             <p>
               © {2026} {site.name}. {site.tagline}.
             </p>
