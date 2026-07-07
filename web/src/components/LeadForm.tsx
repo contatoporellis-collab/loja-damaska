@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { requestMeasurement, type MeasurementState } from "@/app/actions";
 import { Button } from "./Button";
 import { Check, Max, Whatsapp } from "./icons";
 import { cn } from "@/lib/cn";
+import { UTM_KEYS, captureUtm, getStoredUtm, reachGoal } from "@/lib/analytics";
 
 const initial: MeasurementState = { status: "idle" };
 
@@ -44,6 +45,25 @@ export function LeadForm({
   );
   const phoneErr = state.status === "error" ? state.fieldErrors?.phone : undefined;
 
+  // UTM/yclid проставляем в скрытые поля после монтирования (через ref, без
+  // ре-рендера — чтобы не ломать гидратацию; уходят вместе с заявкой).
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    captureUtm(); // на случай, если эффект формы сработал раньше Analytics
+    const utm = getStoredUtm();
+    const form = formRef.current;
+    if (!form) return;
+    for (const k of UTM_KEYS) {
+      const input = form.elements.namedItem(k) as HTMLInputElement | null;
+      if (input) input.value = utm[k] || "";
+    }
+  }, []);
+
+  // Цель Метрики при успешной отправке заявки.
+  useEffect(() => {
+    if (state.status === "success") reachGoal("form_submit");
+  }, [state.status]);
+
   if (state.status === "success") {
     return (
       <div
@@ -66,6 +86,7 @@ export function LeadForm({
 
   return (
     <form
+      ref={formRef}
       id={id}
       action={formAction}
       noValidate
@@ -124,6 +145,10 @@ export function LeadForm({
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
       />
       <input type="hidden" name="source" value={source} />
+      {/* UTM/yclid из рекламы — уходят вместе с заявкой */}
+      {UTM_KEYS.map((k) => (
+        <input key={k} type="hidden" name={k} defaultValue="" />
+      ))}
 
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? "Отправляем…" : button}

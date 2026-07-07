@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { Analytics } from "@/components/Analytics";
 import "./globals.css";
 
 // Один шрифт на весь сайт. latin нужен для «DAMASKA / WhatsApp / ZIP / +7».
@@ -21,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" data-scroll-behavior="smooth" className={manrope.variable}>
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

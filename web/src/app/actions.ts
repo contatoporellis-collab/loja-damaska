@@ -77,7 +77,18 @@ type Lead = {
   date: string;
   time: string;
   comment: string;
+  utm?: Record<string, string>;
 };
+
+// Порядок и подписи UTM-меток в письме.
+const UTM_LABELS: [string, string][] = [
+  ["utm_source", "Источник (utm_source)"],
+  ["utm_medium", "Тип (utm_medium)"],
+  ["utm_campaign", "Кампания (utm_campaign)"],
+  ["utm_content", "Объявление (utm_content)"],
+  ["utm_term", "Ключевое слово (utm_term)"],
+  ["yclid", "yclid"],
+];
 
 const MAIL_API_KEY = process.env.MAIL_API_KEY;
 const MAIL_TO = process.env.MAIL_TO || "damaskad@yandex.ru";
@@ -99,6 +110,10 @@ function formatLead(lead: Lead): { subject: string; text: string; html: string }
     ["Откуда", lead.product || "лендинг"],
   ];
   if (lead.comment) rows.push(["Комментарий", lead.comment]);
+  const utm = lead.utm ?? {};
+  for (const [key, label] of UTM_LABELS) {
+    if (utm[key]) rows.push([label, utm[key]]);
+  }
   rows.push(["Время (МСК)", when]);
 
   const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
@@ -189,6 +204,13 @@ export async function requestMeasurement(
     };
   }
 
+  // Рекламные метки из скрытых полей формы.
+  const utm: Record<string, string> = {};
+  for (const [key] of UTM_LABELS) {
+    const v = String(formData.get(key) ?? "").trim();
+    if (v) utm[key] = v;
+  }
+
   await sendLead({
     name: name || "—",
     phone,
@@ -197,6 +219,7 @@ export async function requestMeasurement(
     date: "",
     time: "",
     comment: "",
+    utm,
   });
 
   return { status: "success" };
