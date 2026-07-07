@@ -374,9 +374,9 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-wrap gap-2.5">
               {[
-                "Доставка по всей России",
-                "Монтаж по видеоинструкции",
                 "Готовые размеры на складе",
+                "Быстрый монтаж без ожидания производства",
+                "Фиксированная цена по договору",
               ].map((p) => (
                 <span
                   key={p}
@@ -389,9 +389,8 @@ export default function LandingPage() {
             </div>
             <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
               <p className="max-w-xl text-sm leading-relaxed text-muted">
-                Цена — за готовое изделие, без монтажа. Отправляем по всей
-                России: маркизу вы легко установите сами по нашей подробной
-                видеоинструкции.
+                Цена — за готовое изделие. Нужен замер и монтаж под ключ в
+                Краснодаре — рассчитаем стоимость и зафиксируем в договоре.
               </p>
               <ButtonLink href="#zayavka" size="lg" className="shrink-0">
                 Уточнить наличие и заказать
@@ -585,6 +584,29 @@ export default function LandingPage() {
           <Container className="flex flex-col gap-10">
             <SectionTitle eyebrow="Вопросы и ответы" title={landing.faq.title} align="center" />
             <Faq />
+          </Container>
+        </section>
+
+        {/* ---------------------------------- НЕ ИЗ КРАСНОДАРА (вторично) */}
+        <section className="border-y border-line bg-sand/40">
+          <Container className="flex flex-col items-start gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-1">
+              <span className="font-display text-base font-semibold text-ink">
+                Не из Краснодара?
+              </span>
+              <p className="max-w-2xl text-sm leading-relaxed text-muted">
+                Отправим готовую маркизу в любой регион России с подробной
+                видеоинструкцией по монтажу.
+              </p>
+            </div>
+            <ButtonLink
+              href="#zayavka"
+              variant="outline"
+              size="md"
+              className="shrink-0"
+            >
+              Узнать о доставке
+            </ButtonLink>
           </Container>
         </section>
 
