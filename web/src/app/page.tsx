@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Container } from "@/components/Container";
 import { ButtonLink } from "@/components/Button";
+import { CatalogButton } from "@/components/CatalogButton";
 import { LeadForm } from "@/components/LeadForm";
 import { Faq } from "@/components/Faq";
 import { ProductImage } from "@/components/ProductImage";
@@ -392,9 +393,12 @@ export default function LandingPage() {
                 Цена — за готовое изделие. Нужен замер и монтаж под ключ в
                 Краснодаре — рассчитаем стоимость и зафиксируем в договоре.
               </p>
-              <ButtonLink href="#zayavka" size="lg" className="shrink-0">
-                Уточнить наличие и заказать
-              </ButtonLink>
+              <div className="flex shrink-0 flex-col gap-2">
+                <ButtonLink href="#zayavka" size="lg">
+                  Уточнить наличие и заказать
+                </ButtonLink>
+                <CatalogButton />
+              </div>
             </div>
           </Container>
         </section>
@@ -635,6 +639,7 @@ export default function LandingPage() {
                       {contacts.phone}
                     </a>
                   </div>
+                  <CatalogButton className="self-start" />
                 </div>
 
                 <LeadForm

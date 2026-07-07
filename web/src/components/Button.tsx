@@ -40,6 +40,7 @@ export function ButtonLink({
   size = "md",
   className,
   children,
+  dataGoal,
   ...rest
 }: {
   href: string;
@@ -47,6 +48,8 @@ export function ButtonLink({
   size?: Size;
   className?: string;
   children: ReactNode;
+  /** Метка цели Метрики (data-goal) — читается делегированием в Analytics. */
+  dataGoal?: string;
 } & Omit<ComponentProps<typeof Link>, "href" | "className">) {
   const external = /^https?:|^tel:|^mailto:/.test(href);
   // Якорные ссылки (#...) рендерим нативным <a>: браузер сам прокручивает
@@ -56,6 +59,7 @@ export function ButtonLink({
       <a
         href={href}
         className={classes(variant, size, className)}
+        data-goal={dataGoal}
         {...(href.startsWith("http")
           ? { target: "_blank", rel: "noopener noreferrer" }
           : {})}
@@ -65,7 +69,12 @@ export function ButtonLink({
     );
   }
   return (
-    <Link href={href} className={classes(variant, size, className)} {...rest}>
+    <Link
+      href={href}
+      className={classes(variant, size, className)}
+      data-goal={dataGoal}
+      {...rest}
+    >
       {children}
     </Link>
   );
