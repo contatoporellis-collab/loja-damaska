@@ -11,7 +11,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://damaska.net"),
+  metadataBase: new URL("https://damaska123.ru"),
   title: "Маркизы в Краснодаре под ключ | DAMASKA",
 };
 

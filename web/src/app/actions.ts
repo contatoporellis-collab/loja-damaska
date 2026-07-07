@@ -9,7 +9,7 @@
  *   MAIL_API_KEY   — API-ключ Unisender Go (обязателен для отправки)
  *   MAIL_TO        — куда слать заявки (по умолчанию damaskad@yandex.ru)
  *   MAIL_FROM      — адрес отправителя на ПОДТВЕРЖДЁННОМ домене
- *                    (по умолчанию zayavki@damaska.net)
+ *                    (по умолчанию zayavki@damaska123.ru)
  *   MAIL_FROM_NAME — имя отправителя (по умолчанию «Сайт DAMASKA»)
  * Если MAIL_API_KEY не задан (например, локально) — заявка только логируется
  * на сервере, форма продолжает работать.
@@ -92,7 +92,7 @@ const UTM_LABELS: [string, string][] = [
 
 const MAIL_API_KEY = process.env.MAIL_API_KEY;
 const MAIL_TO = process.env.MAIL_TO || "damaskad@yandex.ru";
-const MAIL_FROM = process.env.MAIL_FROM || "zayavki@damaska.net";
+const MAIL_FROM = process.env.MAIL_FROM || "zayavki@damaska123.ru";
 const MAIL_FROM_NAME = process.env.MAIL_FROM_NAME || "Сайт DAMASKA";
 const UNISENDER_ENDPOINT =
   "https://goapi.unisender.ru/ru/transactional/api/v1/email/send.json";

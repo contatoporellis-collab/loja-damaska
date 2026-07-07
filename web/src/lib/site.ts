@@ -6,7 +6,7 @@ export const site = {
   tagline: "Маркизы под ключ — внешние солнцезащитные системы",
   city: "Краснодар",
   since: 2011,
-  url: "https://damaska.net",
+  url: "https://damaska123.ru",
 };
 
 export const contacts = {
