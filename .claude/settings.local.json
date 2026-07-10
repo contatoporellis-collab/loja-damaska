@@ -72,7 +72,20 @@
       "Bash(git commit *)",
       "Bash(awk '{print $5, $9}')",
       "Bash(echo \"=== committed: $? ===\")",
-      "WebFetch(domain:contatoporellis-collab-loja-damaska-9b98.twc1.net)"
+      "WebFetch(domain:contatoporellis-collab-loja-damaska-9b98.twc1.net)",
+      "Bash(nslookup -type=NS damaska123.ru)",
+      "Bash(nslookup damaska123.ru)",
+      "Bash(nslookup damaska123.ru ns1.timeweb.ru)",
+      "Bash(curl -sSI https://damaska123.ru --max-time 20)",
+      "Bash(curl -sI -k https://damaska123.ru --max-time 20)",
+      "Bash(curl -sv https://damaska123.ru --max-time 20)",
+      "Bash(curl -sI http://damaska123.ru --max-time 20)",
+      "Bash(curl -s https://damaska123.ru --max-time 20)",
+      "Bash(awk '{s=$5/1024; printf \"%.0f KB  %s\\\\n\", s, $9}')",
+      "Bash(:)",
+      "Bash(curl -s -o /dev/null -w 'status=%{http_code} type=%{content_type} size=%{size_download}B time=%{time_total}s\\\\n' -H 'Accept: image/avif,image/webp,image/*,*/*' 'https://damaska123.ru/_next/image?url=%2Fimages%2Fworks%2Fwork-dora.jpg&w=750&q=75' --max-time 45)",
+      "Bash(curl -s -o /dev/null -w 'status=%{http_code} type=%{content_type} size=%{size_download}B time=%{time_total}s\\\\n' -H 'Accept: image/avif,image/webp,image/*,*/*' 'https://damaska123.ru/_next/image?url=%2Fimages%2Fproducts%2Fmarkiza-loktevaya.jpg&w=828&q=75' --max-time 45)",
+      "Bash(curl -s -o /dev/null -w 'status=%{http_code} type=%{content_type} size=%{size_download}B time=%{time_total}s\\\\n' -H 'Accept: image/avif,image/webp,image/*,*/*' 'https://damaska123.ru/_next/image?url=%2Fimages%2Fproducts%2Fmarkiza-vertikalnaya.jpg&w=1080&q=75' --max-time 60)"
     ]
   }
 }
