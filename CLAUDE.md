@@ -45,10 +45,10 @@
 4. **Medição e projeto de design gratuitos** — visita de especialista + ajuda de designer.
 
 ## Contatos / showroom
-- **Tel:** +7 (938) 412-47-93
-- **Telegram:** @KatrinThesun
+- **Tel (site, колл-трекинг → amoCRM):** +7 (928) 268-40-85
+- **WhatsApp/MAX (atendente):** +7 (928) 268-41-06
 - **VK:** https://vk.com/jaluzikrasnodar
-- **Showroom:** Краснодар, ул. Зиповская, 5, лит. Б, Технопарк, 2 этаж, офис 216
+- **Showroom:** Краснодар, ул. Дальняя, 43, офис 306 (Пн–Сб 9:00–18:00)
 
 ## Material de referência nesta pasta
 - `DAMASKA_Marketing-Kit_compressed-1.pdf` — kit de marketing original (fonte da verdade).

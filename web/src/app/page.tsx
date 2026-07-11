@@ -82,7 +82,7 @@ export default function LandingPage() {
     name: "DAMASKA — Фабрика солнцезащитных систем",
     description: landing.seo.description,
     image: `${site.url}/images/products/markiza-loktevaya.jpg`,
-    telephone: "+79384124793",
+    telephone: "+79282684085",
     foundingDate: "2011",
     priceRange: "от 39 000 ₽",
     address: {

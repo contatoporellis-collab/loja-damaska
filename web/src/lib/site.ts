@@ -10,8 +10,9 @@ export const site = {
 };
 
 export const contacts = {
-  phone: "+7 (938) 412-47-93",
-  phoneHref: "tel:+79384124793",
+  // Номер колл-трекинга: звонки с сайта попадают к операторам и в amoCRM.
+  phone: "+7 (928) 268-40-85",
+  phoneHref: "tel:+79282684085",
   whatsapp: "+7 (928) 268-41-06",
   // WhatsApp привязан к номеру +7 (928) 268-41-06 (тот же номер, что и MAX).
   whatsappHref: "https://wa.me/79282684106",
