@@ -27,7 +27,7 @@ export const contacts = {
   emailHref: "mailto:damaskad@yandex.ru",
   address: "Краснодар, ул. Дальняя, 43, офис 306",
   addressShort: "ул. Дальняя, 43 · офис 306",
-  hours: "Пн–Сб, 9:00–18:00",
+  hours: "Вт–Сб, 9:00–18:00",
 };
 
 /** Мягкий CTA: каталог тканей и цены в WhatsApp с преднастроенным сообщением. */
@@ -55,7 +55,7 @@ export const operator = {
   emailHref: "mailto:damaskad@yandex.ru",
   phone: "+7 (928) 883-50-53",
   phoneHref: "tel:+79288835053",
-  hours: "Пн–Сб, 9:00–18:00",
+  hours: "Вт–Сб, 9:00–18:00",
   // Дата последней редакции юридических документов
   docsUpdated: "3 июля 2026 г.",
 };
