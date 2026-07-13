@@ -67,6 +67,9 @@ export function OperatorRequisites() {
         <strong>ИНН:</strong> {operator.inn}
       </p>
       <p>
+        <strong>ОГРНИП:</strong> {operator.ogrnip}
+      </p>
+      <p>
         <strong>Адрес:</strong> {operator.legalAddress}
       </p>
       <p>
