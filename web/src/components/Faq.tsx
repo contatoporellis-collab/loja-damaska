@@ -1,10 +1,14 @@
 import { landing } from "@/data/landing";
 
 /** FAQ на нативных <details> — раскрытие без JavaScript. */
-export function Faq() {
+export function Faq({
+  items = landing.faq.items,
+}: {
+  items?: { q: string; a: string }[];
+}) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-3">
-      {landing.faq.items.map((item) => (
+      {items.map((item) => (
         <details
           key={item.q}
           className="group rounded-[var(--radius-md)] border border-line bg-surface px-5 open:shadow-[var(--shadow-card)]"
