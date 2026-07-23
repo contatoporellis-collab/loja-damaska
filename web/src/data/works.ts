@@ -64,14 +64,14 @@ export const workGroups: WorkGroup[] = [
         alt: "Маркизы для ресторана «Раков и Крабов» в центре Краснодара",
       },
       {
-        src: "/images/works/work-4syna.jpg",
-        caption: "Пиццерия «Четыре сына»",
-        alt: "Маркизы с фирменным принтом для пиццерии «Четыре сына» в Краснодаре",
-      },
-      {
         src: "/images/works/work-shato.webp",
         caption: "Бутик-отель «Шато»",
         alt: "Маркизы для бутик-отеля «Шато» в Краснодаре",
+      },
+      {
+        src: "/images/works/work-4syna.jpg",
+        caption: "Пиццерия «Четыре сына»",
+        alt: "Маркизы с фирменным принтом для пиццерии «Четыре сына» в Краснодаре",
       },
       {
         src: "/images/works/work-tabris.jpg",
