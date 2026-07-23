@@ -40,7 +40,7 @@ function leadFormProps(source: string) {
 }
 
 // Портфолио для HoReCa: сначала бизнес (кафе/рестораны), внутри — общепит первым.
-const HORECA_FIRST = ["work-forno-rosso", "work-rakov", "work-dim-coffee"];
+const HORECA_FIRST = ["work-forno-rosso", "work-rakov", "work-4syna", "work-dim-coffee"];
 function orderedGroups() {
   const rank = (src: string) => {
     const i = HORECA_FIRST.findIndex((s) => src.includes(s));
