@@ -57,3 +57,38 @@ export function getStoredUtm(): Record<string, string> {
     return {};
   }
 }
+
+/**
+ * ClientID Метрики — ключ, по которому коннектор Метрика↔amoCRM связывает
+ * сделку с визитом на сайте (поле `_ym_uid`, код `_YM_UID` в CRM).
+ * Без него заказы из CRM не доезжают до отчётов Метрики и Директа.
+ */
+export const YM_UID_KEY = "_ym_uid";
+
+/**
+ * Спросить ClientID у счётчика и положить рядом с метками.
+ * Ответ приходит асинхронно, поэтому есть колбэк: форма проставляет
+ * значение в скрытое поле по готовности, а не в момент монтирования.
+ */
+export function captureYmClientId(onReady?: (clientId: string) => void): void {
+  if (typeof window === "undefined" || !YM_ID) return;
+  const ym = (window as unknown as { ym?: YmFn }).ym;
+  if (typeof ym !== "function") return;
+  try {
+    ym(Number(YM_ID), "getClientID", (clientId: string) => {
+      if (!clientId) return;
+      try {
+        const store = getStoredUtm();
+        if (store[YM_UID_KEY] !== clientId) {
+          store[YM_UID_KEY] = clientId;
+          sessionStorage.setItem(STORE_KEY, JSON.stringify(store));
+        }
+      } catch {
+        /* приватный режим / нет sessionStorage — не критично */
+      }
+      onReady?.(clientId);
+    });
+  } catch {
+    /* счётчик ещё не готов — заявка уйдёт без ClientID */
+  }
+}

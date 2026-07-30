@@ -6,7 +6,14 @@ import { requestMeasurement, type MeasurementState } from "@/app/actions";
 import { Button } from "./Button";
 import { Check, Max, Whatsapp } from "./icons";
 import { cn } from "@/lib/cn";
-import { UTM_KEYS, captureUtm, getStoredUtm, reachGoal } from "@/lib/analytics";
+import {
+  UTM_KEYS,
+  YM_UID_KEY,
+  captureUtm,
+  captureYmClientId,
+  getStoredUtm,
+  reachGoal,
+} from "@/lib/analytics";
 
 const initial: MeasurementState = { status: "idle" };
 
@@ -57,6 +64,15 @@ export function LeadForm({
       const input = form.elements.namedItem(k) as HTMLInputElement | null;
       if (input) input.value = utm[k] || "";
     }
+    // ClientID Метрики: из хранилища сразу, из счётчика — по готовности.
+    const setYmUid = (value: string) => {
+      const input = form.elements.namedItem(
+        YM_UID_KEY,
+      ) as HTMLInputElement | null;
+      if (input) input.value = value;
+    };
+    if (utm[YM_UID_KEY]) setYmUid(utm[YM_UID_KEY]);
+    captureYmClientId(setYmUid);
   }, []);
 
   // Цель Метрики при успешной отправке заявки.
@@ -149,6 +165,8 @@ export function LeadForm({
       {UTM_KEYS.map((k) => (
         <input key={k} type="hidden" name={k} defaultValue="" />
       ))}
+      {/* ClientID Метрики — связывает сделку в CRM с визитом на сайте */}
+      <input type="hidden" name={YM_UID_KEY} defaultValue="" />
 
       <Button type="submit" size="lg" disabled={pending} className="w-full">
         {pending ? "Отправляем…" : button}

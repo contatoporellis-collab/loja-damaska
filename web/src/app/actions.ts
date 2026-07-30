@@ -107,6 +107,12 @@ const UNISENDER_ENDPOINT =
 const AMOCRM_SUBDOMAIN = process.env.AMOCRM_SUBDOMAIN; // напр. "damaska"
 const AMOCRM_TOKEN = process.env.AMOCRM_ACCESS_TOKEN; // долгосрочный токен
 
+// Сквозная аналитика: ClientID Метрики едет в сделку скрытым полем формы
+// и ложится в предустановленное поле amoCRM `_ym_uid` (код `_YM_UID`).
+// По нему коннектор Метрика↔amoCRM связывает заказ из CRM с визитом.
+const YM_UID_FIELD = "_ym_uid";
+const YM_COUNTER_ID = process.env.NEXT_PUBLIC_YM_ID;
+
 function formatLead(lead: Lead): { subject: string; text: string; html: string } {
   const when = new Intl.DateTimeFormat("ru-RU", {
     dateStyle: "short",
@@ -190,6 +196,34 @@ function amocrmNote(lead: Lead): string {
   return lines.join("\n");
 }
 
+/**
+ * Поля сквозной аналитики для сделки amoCRM.
+ * Пишутся отдельным запросом после создания сделки: если код поля вдруг
+ * не подойдёт, заявка всё равно уже в CRM — доставка лида не срывается.
+ */
+function amocrmTrackingFields(
+  lead: Lead,
+): { field_code: string; values: { value: string }[] }[] {
+  const utm = lead.utm ?? {};
+  const fields: { field_code: string; values: { value: string }[] }[] = [];
+  if (utm[YM_UID_FIELD]) {
+    fields.push({
+      field_code: "_YM_UID",
+      values: [{ value: utm[YM_UID_FIELD] }],
+    });
+    if (YM_COUNTER_ID) {
+      fields.push({
+        field_code: "_YM_COUNTER",
+        values: [{ value: YM_COUNTER_ID }],
+      });
+    }
+  }
+  if (utm.yclid) {
+    fields.push({ field_code: "YCLID", values: [{ value: utm.yclid }] });
+  }
+  return fields;
+}
+
 /** Создать сделку + контакт в amoCRM (основной канал). */
 async function sendToAmocrm(lead: Lead): Promise<void> {
   if (!AMOCRM_SUBDOMAIN || !AMOCRM_TOKEN) return;
@@ -237,9 +271,28 @@ async function sendToAmocrm(lead: Lead): Promise<void> {
       return;
     }
 
-    // Примечание с источником/UTM (best-effort, сделка уже создана).
     const data = await res.json().catch(() => null);
     const leadId = Array.isArray(data) ? data[0]?.id : undefined;
+
+    // ClientID Метрики и yclid — в поля сделки (best-effort, сделка создана).
+    const tracking = amocrmTrackingFields(lead);
+    if (leadId && tracking.length > 0) {
+      const patched = await fetch(`${base}/leads/${leadId}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ custom_fields_values: tracking }),
+      }).catch(() => null);
+      if (!patched?.ok) {
+        // Не критично: сделка на месте, теряется только связь с визитом.
+        console.error(
+          `[DAMASKA] amoCRM не принял метки сквозной аналитики (${
+            patched?.status ?? "нет ответа"
+          }): ${await patched?.text().catch(() => "")}`,
+        );
+      }
+    }
+
+    // Примечание с источником/UTM (best-effort, сделка уже создана).
     if (leadId) {
       await fetch(`${base}/leads/${leadId}/notes`, {
         method: "POST",
@@ -301,6 +354,11 @@ export async function requestMeasurement(
     const v = String(formData.get(key) ?? "").trim();
     if (v) utm[key] = v;
   }
+
+  // ClientID Метрики — не метка из URL, приходит отдельным скрытым полем.
+  // В письмо и примечание не попадает (его нет в UTM_LABELS) — только в CRM.
+  const ymUid = String(formData.get(YM_UID_FIELD) ?? "").trim();
+  if (ymUid) utm[YM_UID_FIELD] = ymUid;
 
   await sendLead({
     name: name || "—",
