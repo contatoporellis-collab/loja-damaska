@@ -72,23 +72,34 @@ export const YM_UID_KEY = "_ym_uid";
  */
 export function captureYmClientId(onReady?: (clientId: string) => void): void {
   if (typeof window === "undefined" || !YM_ID) return;
-  const ym = (window as unknown as { ym?: YmFn }).ym;
-  if (typeof ym !== "function") return;
-  try {
-    ym(Number(YM_ID), "getClientID", (clientId: string) => {
-      if (!clientId) return;
-      try {
-        const store = getStoredUtm();
-        if (store[YM_UID_KEY] !== clientId) {
-          store[YM_UID_KEY] = clientId;
-          sessionStorage.setItem(STORE_KEY, JSON.stringify(store));
+
+  let tries = 0;
+  const ask = () => {
+    const ym = (window as unknown as { ym?: YmFn }).ym;
+    // Счётчик подключается со strategy="afterInteractive", поэтому в момент
+    // монтирования формы `ym` обычно ещё не существует. Ждём его появления,
+    // а не сдаёмся с первой попытки — иначе ClientID не уедет никогда.
+    if (typeof ym !== "function") {
+      if (tries++ < 50) window.setTimeout(ask, 200); // ждём до ~10 секунд
+      return;
+    }
+    try {
+      ym(Number(YM_ID), "getClientID", (clientId: string) => {
+        if (!clientId) return;
+        try {
+          const store = getStoredUtm();
+          if (store[YM_UID_KEY] !== clientId) {
+            store[YM_UID_KEY] = clientId;
+            sessionStorage.setItem(STORE_KEY, JSON.stringify(store));
+          }
+        } catch {
+          /* приватный режим / нет sessionStorage — не критично */
         }
-      } catch {
-        /* приватный режим / нет sessionStorage — не критично */
-      }
-      onReady?.(clientId);
-    });
-  } catch {
-    /* счётчик ещё не готов — заявка уйдёт без ClientID */
-  }
+        onReady?.(clientId);
+      });
+    } catch {
+      /* счётчик отвалился — заявка уйдёт без ClientID, это не блокер */
+    }
+  };
+  ask();
 }
