@@ -7,7 +7,11 @@ import { Phone, Ruler, Max } from "./icons";
  * Телефон и мессенджер часто конвертируют лучше формы у аудитории 30–60.
  * Чистый CSS, без JS.
  */
-export function StickyMobileBar() {
+export function StickyMobileBar({
+  requestLabel,
+}: {
+  requestLabel?: string;
+}) {
   const m = landing.microcopy;
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bone/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
@@ -33,7 +37,9 @@ export function StickyMobileBar() {
           className="flex flex-col items-center gap-1 bg-accent py-2.5 text-white active:bg-accent-700"
         >
           <Ruler className="h-5 w-5" />
-          <span className="text-xs font-semibold">{m.stickyRequest}</span>
+          <span className="text-xs font-semibold">
+            {requestLabel ?? m.stickyRequest}
+          </span>
         </a>
       </div>
     </div>
