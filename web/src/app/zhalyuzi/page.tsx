@@ -86,7 +86,7 @@ export default function ZhalyuziLandingPage() {
     image: `${site.url}/images/zhalyuzi/zh-den-noch-more.jpg`,
     telephone: "+79282684085",
     foundingDate: "2011",
-    priceRange: "от 1 490 ₽",
+    priceRange: "от 3 600 ₽",
     address: {
       "@type": "PostalAddress",
       streetAddress: "ул. Дальняя, 43, офис 306",
@@ -328,9 +328,9 @@ export default function ZhalyuziLandingPage() {
               ))}
             </div>
             <p className="text-sm leading-relaxed text-bone/50">
-              Цены указаны «от» — за изделие минимального размера. Точную
-              стоимость по вашим размерам посчитаем за один звонок и зафиксируем
-              до производства.
+              Цены указаны «от»: рулонные — за створку 50×120 см, жалюзи — за
+              м². Точную стоимость по вашим размерам посчитаем за один звонок и
+              зафиксируем до производства.
             </p>
           </Container>
         </section>
