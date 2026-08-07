@@ -338,7 +338,11 @@ export async function requestMeasurement(
 
   const name = String(formData.get("name") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
-  const source = String(formData.get("source") ?? "лендинг").trim();
+  let source = String(formData.get("source") ?? "лендинг").trim();
+  // Необязательный выбор товара (LP v2): дописываем к источнику — попадает
+  // в название сделки и примечание amoCRM без изменения схемы доставки.
+  const product = String(formData.get("product") ?? "").trim();
+  if (product) source = `${source} · ${product}`;
 
   if (!phoneRe.test(phone)) {
     return {
