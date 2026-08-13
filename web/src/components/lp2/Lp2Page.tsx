@@ -2,6 +2,7 @@ import { Cormorant_Garamond } from "next/font/google";
 import { contacts, site } from "@/lib/site";
 import { type Lp2Variant } from "@/data/lp2";
 import { Lp2Form } from "./Lp2Form";
+import { Lp2Quiz } from "./Lp2Quiz";
 import { Lp2Effects } from "./Lp2Effects";
 import "./lp2.css";
 
@@ -178,6 +179,15 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
               {contacts.phone}
               <small>Пн–Сб 9:00–18:00</small>
             </a>
+            <a
+              href={contacts.phoneHref}
+              className="nav-phone-mini"
+              aria-label="Позвонить"
+            >
+              <svg fill="none" strokeWidth="1.8" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+              </svg>
+            </a>
             <a href="#order" className="btn btn-primary">
               Рассчитать стоимость
             </a>
@@ -213,8 +223,8 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
             </h1>
             <p className="hero-sub">{v.hero.sub}</p>
             <div className="hero-actions">
-              <a href="#order" className="btn btn-primary">
-                Рассчитать стоимость
+              <a href="#quiz" className="btn btn-primary">
+                Подобрать за 4 вопроса
               </a>
               <a
                 href={contacts.whatsappHref}
@@ -287,8 +297,35 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
         </div>
       </div>
 
+      {/* ------------------------------------------------------------ QUIZ */}
+      <section id="quiz">
+        <div className="container">
+          <div
+            className="section-head reveal"
+            style={{ marginLeft: "auto", marginRight: "auto", textAlign: "center", maxWidth: 720 }}
+          >
+            <div className="eyebrow" style={{ justifyContent: "center" }}>
+              Подбор за 1 минуту
+            </div>
+            <h2>Ответьте на 4 вопроса — пришлём расчёт</h2>
+            <p>
+              Не нужно разбираться в каталоге: подберём решение под ваши окна
+              и посчитаем точную стоимость.
+            </p>
+          </div>
+          <div className="quiz-wrap reveal">
+            <Lp2Quiz source={v.source} />
+            <p className="quiz-phone">
+              Удобнее голосом? Звоните:{" "}
+              <a href={contacts.phoneHref}>{contacts.phone}</a> · Пн–Сб
+              9:00–18:00
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* --------------------------------------------------------- CATALOG */}
-      <section id="catalog">
+      <section id="catalog" style={{ paddingTop: 0 }}>
         <div className="container">
           <div className="section-head reveal">
             <div className="eyebrow">Каталог</div>
@@ -695,8 +732,8 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
         <a href={contacts.phoneHref} className="btn btn-ghost">
           Позвонить
         </a>
-        <a href="#order" className="btn btn-primary">
-          Рассчитать
+        <a href="#quiz" className="btn btn-primary">
+          Подобрать шторы
         </a>
       </div>
 
