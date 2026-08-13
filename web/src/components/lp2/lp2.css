@@ -205,6 +205,10 @@
 .lp2 .form-alt a{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:999px;border:1px solid var(--line)}
 .lp2 .form-alt a:hover{border-color:var(--accent);color:var(--accent)}
 
+/* video demo */
+.lp2 .video-wrap{max-width:900px;margin:0 auto;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative}
+.lp2 .video-wrap video{width:100%;display:block}
+
 /* quiz */
 .lp2 .quiz-wrap{max-width:680px;margin:0 auto}
 .lp2 .quiz-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(26px,4vw,40px);box-shadow:var(--shadow);position:relative}

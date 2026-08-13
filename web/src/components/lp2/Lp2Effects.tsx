@@ -96,6 +96,21 @@ export function Lp2Effects() {
       cleanups.push(() => lb.removeEventListener("click", close));
     }
 
+    // видео-демо: играет только на экране (экономим трафик мобильных)
+    const video = root.querySelector<HTMLVideoElement>("video[data-autoplay]");
+    if (video) {
+      const vio = new IntersectionObserver(
+        (es) =>
+          es.forEach((e) => {
+            if (e.isIntersecting) video.play().catch(() => {});
+            else video.pause();
+          }),
+        { threshold: 0.35 },
+      );
+      vio.observe(video);
+      cleanups.push(() => vio.disconnect());
+    }
+
     // «Рассчитать» в карточке товара
     root.querySelectorAll<HTMLElement>(".product .link").forEach((l) => {
       const onClick = () => {

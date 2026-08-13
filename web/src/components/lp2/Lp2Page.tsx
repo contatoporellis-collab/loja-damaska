@@ -361,6 +361,38 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
         </div>
       </section>
 
+      {/* ----------------------------------------------------------- VIDEO */}
+      <section id="video" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <div
+            className="section-head reveal"
+            style={{ marginLeft: "auto", marginRight: "auto", textAlign: "center", maxWidth: 720 }}
+          >
+            <div className="eyebrow" style={{ justifyContent: "center" }}>
+              Вживую
+            </div>
+            <h2>Посмотрите, как это работает</h2>
+            <p>
+              Рулонные шторы Мини на створке и день-ночь на большом окне — те
+              же модели, что мы изготовим по вашим размерам.
+            </p>
+          </div>
+          <div className="video-wrap reveal">
+            <video
+              muted
+              playsInline
+              loop
+              preload="none"
+              poster="/images/lp2/demo-poster.jpg"
+              data-autoplay="1"
+              aria-label="Видео: рулонные шторы DAMASKA в работе"
+            >
+              <source src="/images/lp2/demo-rulonnye.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
       {/* --------------------------------------------------------- FACTORY */}
       <section id="factory" style={{ paddingTop: 0 }}>
         <div className="container">
