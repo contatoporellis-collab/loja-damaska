@@ -234,33 +234,54 @@ async function sendToAmocrm(lead: Lead): Promise<void> {
     Authorization: `Bearer ${AMOCRM_TOKEN}`,
   };
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(`${base}/leads/complex`, {
-      method: "POST",
-      headers,
-      signal: controller.signal,
-      body: JSON.stringify([
-        {
-          name: `Заявка с сайта (${lead.product || "лендинг"})`,
-          _embedded: {
-            contacts: [
+  // 14.08.2026: реальная заявка (квиз) дошла до Метрики, но не до amoCRM —
+  // разовый сбой API съел лид из основного канала. Поэтому таймаут щедрее
+  // и одна повторная попытка перед тем, как сдаться (e-mail остаётся резервом).
+  const complexPayload = [
+    {
+      name: `Заявка с сайта (${lead.product || "лендинг"})`,
+      _embedded: {
+        contacts: [
+          {
+            name: lead.name || "Клиент с сайта",
+            custom_fields_values: [
               {
-                name: lead.name || "Клиент с сайта",
-                custom_fields_values: [
-                  {
-                    field_code: "PHONE",
-                    values: [{ value: lead.phone, enum_code: "WORK" }],
-                  },
-                ],
+                field_code: "PHONE",
+                values: [{ value: lead.phone, enum_code: "WORK" }],
               },
             ],
           },
-        },
-      ]),
-    });
-    clearTimeout(timeout);
+        ],
+      },
+    },
+  ];
+
+  const postComplex = async (): Promise<Response> => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      return await fetch(`${base}/leads/complex`, {
+        method: "POST",
+        headers,
+        signal: controller.signal,
+        body: JSON.stringify(complexPayload),
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+  };
+
+  try {
+    let res: Response;
+    try {
+      res = await postComplex();
+      // 5xx/429 — временные: пробуем ещё раз, как и сетевые ошибки.
+      if (res.status >= 500 || res.status === 429) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+    } catch {
+      res = await postComplex();
+    }
 
     if (!res.ok) {
       console.error(
