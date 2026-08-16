@@ -760,7 +760,7 @@ export function Lp2Page({ v }: { v: Lp2Variant }) {
         </div>
       </footer>
 
-      <div className="mobile-bar">
+      <div className="mobile-bar" data-wa={contacts.whatsappHref}>
         <a href={contacts.phoneHref} className="btn btn-ghost">
           Позвонить
         </a>

@@ -96,6 +96,26 @@ export function Lp2Effects() {
       cleanups.push(() => lb.removeEventListener("click", close));
     }
 
+    // вне рабочих часов (Пн–Сб 9–18 МСК) звонок уходит в никуда — 16.08 видели
+    // в Вебвизоре, как клиент из Севастополя в 20:25 нажал «Позвонить» и пропал.
+    // Вечером и в воскресенье кнопка звонка в нижней панели становится WhatsApp.
+    const bar = root.querySelector<HTMLElement>(".mobile-bar");
+    const callBtn = bar?.querySelector<HTMLAnchorElement>('a[href^="tel:"]');
+    const waHref = bar?.dataset.wa;
+    if (callBtn && waHref) {
+      const msk = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "Europe/Moscow" }),
+      );
+      const closed =
+        msk.getDay() === 0 || msk.getHours() < 9 || msk.getHours() >= 18;
+      if (closed) {
+        callBtn.textContent = "WhatsApp — ответим утром";
+        callBtn.setAttribute("href", waHref);
+        callBtn.setAttribute("target", "_blank");
+        callBtn.setAttribute("rel", "noopener noreferrer");
+      }
+    }
+
     // видео-демо: играет только на экране (экономим трафик мобильных)
     const video = root.querySelector<HTMLVideoElement>("video[data-autoplay]");
     if (video) {
