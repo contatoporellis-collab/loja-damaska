@@ -223,6 +223,21 @@ export function Lp2Quiz({ source }: { source: string }) {
           <button type="submit" className="btn btn-primary" disabled={pending}>
             {pending ? "Отправляем…" : "Получить расчёт"}
           </button>
+          <p className="quiz-reassure">
+            Один звонок или сообщение с расчётом — без спама и рассылок
+          </p>
+          {/* 16–17.08: двое дошли до контактов и не отправили — даём выход
+              без номера: ответы уезжают в WhatsApp от самого клиента. */}
+          <a
+            className="btn btn-wa quiz-wa"
+            href={`${contacts.whatsappHref}?text=${encodeURIComponent(
+              `Здравствуйте! Прошёл подбор на сайте: ${answers.join(" · ")}. Посчитайте, пожалуйста, стоимость.`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Или отправьте ответы в WhatsApp
+          </a>
           <p className="quiz-consent">
             Нажимая кнопку, вы соглашаетесь с{" "}
             <a href="/privacy" target="_blank">
