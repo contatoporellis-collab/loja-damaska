@@ -178,7 +178,7 @@ export function Lp2Form({ source }: { source: string }) {
           </span>
         </label>
         <button type="submit" className="btn btn-primary" disabled={pending}>
-          {pending ? "Отправляем…" : "Получить расчёт"}
+          {pending ? "Отправляем…" : "Отправить и получить расчёт"}
         </button>
       </form>
     </div>
