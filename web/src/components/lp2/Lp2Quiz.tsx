@@ -221,23 +221,34 @@ export function Lp2Quiz({ source }: { source: string }) {
           <input type="hidden" name={YM_UID_KEY} defaultValue="" />
 
           <button type="submit" className="btn btn-primary" disabled={pending}>
-            {pending ? "Отправляем…" : "Получить расчёт"}
+            {pending ? "Отправляем…" : "Отправить и получить расчёт"}
           </button>
           <p className="quiz-reassure">
             Один звонок или сообщение с расчётом — без спама и рассылок
           </p>
-          {/* 16–17.08: двое дошли до контактов и не отправили — даём выход
-              без номера: ответы уезжают в WhatsApp от самого клиента. */}
-          <a
-            className="btn btn-wa quiz-wa"
-            href={`${contacts.whatsappHref}?text=${encodeURIComponent(
-              `Здравствуйте! Прошёл подбор на сайте: ${answers.join(" · ")}. Посчитайте, пожалуйста, стоимость.`,
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Или отправьте ответы в WhatsApp
-          </a>
+          {/* 16–17.08: двое дошли до контактов и не отправили — даём выход без
+              номера. Два мессенджера: WhatsApp доступен не всем в РФ, MAX — да. */}
+          <p className="quiz-alt-label">Не хотите оставлять номер? Отправьте ответы сами:</p>
+          <div className="quiz-alt-row">
+            <a
+              className="btn btn-wa"
+              href={`${contacts.whatsappHref}?text=${encodeURIComponent(
+                `Здравствуйте! Прошёл подбор на сайте: ${answers.join(" · ")}. Посчитайте, пожалуйста, стоимость.`,
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              В WhatsApp
+            </a>
+            <a
+              className="btn btn-max"
+              href={contacts.maxHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              В MAX
+            </a>
+          </div>
           <p className="quiz-consent">
             Нажимая кнопку, вы соглашаетесь с{" "}
             <a href="/privacy" target="_blank">
