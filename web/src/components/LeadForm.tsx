@@ -151,10 +151,10 @@ export function LeadForm({
         ) : null}
       </div>
 
-      {/* honeypot — скрыто от людей, заполняют только боты */}
+      {/* honeypot — имя поля бессмысленное, чтобы автозаполнение его не трогало */}
       <input
         type="text"
-        name="company"
+        name="hp_guard"
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"

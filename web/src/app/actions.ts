@@ -84,6 +84,8 @@ type Lead = {
   time: string;
   comment: string;
   utm?: Record<string, string>;
+  /** Скрытое поле-ловушка пришло заполненным: бот или автозаполнение браузера. */
+  botSuspect?: boolean;
 };
 
 // Порядок и подписи UTM-меток в письме.
@@ -126,6 +128,11 @@ function formatLead(lead: Lead): { subject: string; text: string; html: string }
     ["Откуда", lead.product || "лендинг"],
   ];
   if (lead.comment) rows.push(["Комментарий", lead.comment]);
+  if (lead.botSuspect)
+    rows.push([
+      "Внимание",
+      "скрытое анти-бот поле заполнено — возможно автозаполнение браузера, реже бот",
+    ]);
   const utm = lead.utm ?? {};
   for (const [key, label] of UTM_LABELS) {
     if (utm[key]) rows.push([label, utm[key]]);
@@ -189,6 +196,11 @@ async function sendEmail(lead: Lead): Promise<void> {
 /** Текст примечания к сделке amoCRM: источник + рекламные метки. */
 function amocrmNote(lead: Lead): string {
   const lines = [`Источник формы: ${lead.product || "лендинг"}`];
+  if (lead.botSuspect) {
+    lines.unshift(
+      "⚠️ Скрытое анти-бот поле пришло заполненным. Чаще всего это живой клиент с автозаполнением браузера, реже — бот. Проверьте звонком.",
+    );
+  }
   const utm = lead.utm ?? {};
   for (const [key, label] of UTM_LABELS) {
     if (utm[key]) lines.push(`${label}: ${utm[key]}`);
@@ -352,9 +364,19 @@ export async function requestMeasurement(
   _prev: MeasurementState,
   formData: FormData,
 ): Promise<MeasurementState> {
-  // Антиспам: скрытое поле должно остаться пустым.
-  if (String(formData.get("company") ?? "").trim() !== "") {
-    return { status: "success" };
+  // Ловушка для ботов. Заполненная ловушка ≠ мусор: автозаполнение браузера
+  // подставляет «организацию» даже в скрытое поле — 14.08 и 19.08 так тихо
+  // пропали живые заявки, не дойдя ни до одного канала. Поэтому не
+  // отбрасываем, а доставляем с пометкой «возможен бот» — решает менеджер.
+  // `company` — прежнее имя ловушки: его шлют страницы, открытые до деплоя.
+  const trap = String(
+    formData.get("hp_guard") ?? formData.get("company") ?? "",
+  ).trim();
+  const botSuspect = trap !== "";
+  if (botSuspect) {
+    console.warn(
+      `[DAMASKA] Скрытая ловушка заполнена ("${trap}") — заявка доставляется с пометкой «возможен бот».`,
+    );
   }
 
   const name = String(formData.get("name") ?? "").trim();
@@ -394,6 +416,7 @@ export async function requestMeasurement(
     time: "",
     comment: "",
     utm,
+    botSuspect,
   });
 
   return { status: "success" };
