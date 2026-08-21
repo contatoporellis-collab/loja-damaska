@@ -9,14 +9,22 @@ export const site = {
   url: "https://damaska123.ru",
 };
 
+// WhatsApp привязан к номеру +7 (928) 268-41-06 (тот же номер, что и MAX).
+// Номер общий с другими сайтами фабрики, поэтому каждое сообщение с лендинга
+// начинается с названия сайта — иначе в CRM не видно, откуда пришёл клиент.
+const whatsappBase = "https://wa.me/79282684106";
+const whatsappDefaultText =
+  "Здравствуйте! Пишу с сайта damaska123.ru — хочу рассчитать стоимость.";
+
 export const contacts = {
   // Выделенный номер колл-трекинга damaska123.ru (закреплён за сайтом
-  // в телефонии): звонки попадают к операторам и в amoCRM.
+  // в телефонии, в Roistat — источник «damaska123.ru»): звонки попадают
+  // к операторам и в amoCRM уже с пометкой сайта.
   phone: "+7 (928) 268-40-85",
   phoneHref: "tel:+79282684085",
   whatsapp: "+7 (928) 268-41-06",
-  // WhatsApp привязан к номеру +7 (928) 268-41-06 (тот же номер, что и MAX).
-  whatsappHref: "https://wa.me/79282684106",
+  whatsappBase,
+  whatsappHref: `${whatsappBase}?text=${encodeURIComponent(whatsappDefaultText)}`,
   // MAX (мессенджер). Личная ссылка на профиль (у MAX нет ссылки по номеру).
   max: "MAX",
   maxNumber: "+7 (928) 268-41-06",
@@ -33,9 +41,9 @@ export const contacts = {
 
 /** Мягкий CTA: каталог тканей и цены в WhatsApp с преднастроенным сообщением. */
 export const catalogWhatsappHref =
-  `${contacts.whatsappHref}?text=` +
+  `${whatsappBase}?text=` +
   encodeURIComponent(
-    "Здравствуйте! Пришлите, пожалуйста, каталог тканей и цены на маркизы.",
+    "Здравствуйте! Пишу с сайта damaska123.ru. Пришлите, пожалуйста, каталог тканей и цены на маркизы.",
   );
 
 /**

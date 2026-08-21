@@ -7,7 +7,7 @@ import { YM_ID, captureUtm, reachGoal } from "@/lib/analytics";
 /**
  * Яндекс.Метрика + автоматические цели по кликам (делегирование на document,
  * чтобы не превращать серверные компоненты в клиентские).
- *   tel:    → call_click
+ *   tel:    → call_click (на десктопе — callback_intent + прокрутка к форме)
  *   wa.me   → whatsapp_click
  *   max.ru  → max_click
  *   [data-goal="…"] на ссылке — явная цель (напр. catalog_request).
@@ -29,8 +29,32 @@ export function Analytics() {
         return;
       }
       const href = a.getAttribute("href") || "";
-      if (href.startsWith("tel:")) reachGoal("call_click");
-      else if (href.includes("wa.me")) reachGoal("whatsapp_click");
+      if (href.startsWith("tel:")) {
+        // На устройстве без звонилки (мышь + hover = десктоп) ссылка tel:
+        // ведёт в никуда: 21.08 клиентка из Крыма нажала «Позвонить», звонок
+        // не состоялся, и она оставила номер на другом сайте. Поэтому здесь
+        // ведём к форме и ставим курсор в поле телефона — номер остаётся на
+        // экране, а заявку можно оставить сразу. На телефоне — обычный звонок.
+        const desktop = window.matchMedia(
+          "(hover: hover) and (pointer: fine)",
+        ).matches;
+        const phoneInput = desktop
+          ? document.querySelector<HTMLInputElement>('form input[name="phone"]')
+          : null;
+        if (phoneInput) {
+          e.preventDefault();
+          reachGoal("callback_intent");
+          phoneInput
+            .closest("form")
+            ?.scrollIntoView({ behavior: "smooth", block: "center" });
+          window.setTimeout(
+            () => phoneInput.focus({ preventScroll: true }),
+            600,
+          );
+        } else {
+          reachGoal("call_click");
+        }
+      } else if (href.includes("wa.me")) reachGoal("whatsapp_click");
       else if (href.includes("max.ru")) reachGoal("max_click");
     }
     document.addEventListener("click", onClick);

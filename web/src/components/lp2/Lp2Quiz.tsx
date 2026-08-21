@@ -232,8 +232,8 @@ export function Lp2Quiz({ source }: { source: string }) {
           <div className="quiz-alt-row">
             <a
               className="btn btn-wa"
-              href={`${contacts.whatsappHref}?text=${encodeURIComponent(
-                `Здравствуйте! Прошёл подбор на сайте: ${answers.join(" · ")}. Посчитайте, пожалуйста, стоимость.`,
+              href={`${contacts.whatsappBase}?text=${encodeURIComponent(
+                `Здравствуйте! Прошёл подбор на сайте damaska123.ru: ${answers.join(" · ")}. Посчитайте, пожалуйста, стоимость.`,
               )}`}
               target="_blank"
               rel="noopener noreferrer"
